@@ -1,0 +1,26 @@
+version: '3.5'
+services:
+  web:
+    build: app
+    #image: *****/firelens:web-container
+    ports:
+      - "80:80" 
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd    
+      options:
+        fluentd-address: "localhost:24224"
+        fluentd-async-connect: "true"
+  fluentbit:
+    build:
+      context: fluentbit
+    # image: *****/firelens:fluentbit
+    env_file: ./.env
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+  firelens-fluentbit:  
+    build:
+      context: firelens-fluentbit
+    #image: *****/firelens:firelens-fluentbit

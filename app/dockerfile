@@ -1,0 +1,4 @@
+FROM php:7.2-apache
+COPY ./php/php.ini /usr/local/etc/php/php.ini 
+COPY ./html/index.php /var/www/html/
+COPY ./apache/log.conf /etc/apache2/conf-enabled/
