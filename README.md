@@ -18,8 +18,10 @@ docker-composeで、３つのコンテナが生成されます。
 `http://localhost`
 - webコンテナを開き、人為的エラーを出力
 `http://localhost?exception`
-- datadogから、エラーログが管理されていることを確認する
-- S3から、アクセスログがアップロードされていることを確認する
+- webコンテナを開き、人為的アプリケーションログを出力
+`http://localhost?application`
+- datadogから、エラーログ、アプリケーションログが管理されていることを確認する
+- S3から、アクセスログ、エラーログ、アプリケーションログがアップロードされていることを確認する
 - 生成されたwebと、firelens-fluentbitのdocker-imageを、docker registryにpush
 #### firelens
 - webコンテナで、ECS（fargate）を起動する
@@ -52,23 +54,43 @@ https://docs.aws.amazon.com/en_us/AmazonECS/latest/userguide/using_firelens.html
             },
             "environment": [
                 {
-                    "name": "DATADOG_APIKEY",
+                    "name": "OUT_DATADOG_API_KEY",
                     "value": "*********"
                 },
                 {
-                    "name": "DATADOG_SOURCE",
+                    "name": "OUT_DATADOG_SOURCE",
                     "value": "web-container"
                 },
                 {
-                    "name": "OUT_S3_SECRET_ACCESS_KEY",
-                    "value": "*********"
+                    "name": "OUT_DATADOG_SERVICE_ERROR",
+                    "value": "web-container"
                 },
+                {
+                    "name": "OUT_DATADOG_SERVICE_APPLICATION",
+                    "value": "*********"
+                }       
                 {
                     "name": "OUT_S3_ACCESS_KEY",
                     "value": "*********"
                 },
                 {
+                    "name": "OUT_S3_SECRET_ACCESS_KEY",
+                    "value": "*********"
+                },                
+                {
                     "name": "OUT_S3_BUCKET",
+                    "value": "*********"
+                },
+                {
+                    "name": "OUT_S3_PREFIX_ACCESS",
+                    "value": "*********"
+                },
+                {
+                    "name": "OUT_S3_PREFIX_ERROR",
+                    "value": "*********"
+                },
+                {
+                    "name": "OUT_S3_PREFIX_APPLICATION",
                     "value": "*********"
                 }
             ],

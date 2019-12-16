@@ -1,4 +1,8 @@
 FROM golang:1.13.3-stretch
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+  && apt update -y \
+  && apt install -y locales \
+  && locale-gen ja_JP.UTF-8
 RUN git clone https://github.com/cosmo0920/fluent-bit-go-s3.git
 WORKDIR ./fluent-bit-go-s3
 RUN go get -v -u \
@@ -9,13 +13,15 @@ RUN go get -v -u \
 	github.com/aws/aws-sdk-go/service/s3/s3manager \
 	github.com/fluent/fluent-bit-go/output \
 	github.com/json-iterator/go \
-	github.com/stretchr/testify/assert
+	github.com/stretchr/testify/assert \
+	github.com/prometheus/common/version \
+	github.com/sirupsen/logrus
 RUN make
 
-FROM fluent/fluent-bit:1.3
-COPY ./fluent_bit_custom.conf /fluent-bit/etc/fluent-bit.conf
-COPY ./parser.conf /fluent-bit/etc/parser.conf
-COPY ./stream_processor.conf /fluent-bit/etc/stream_processor.conf
+FROM fluent/fluent-bit:1.3.3
+COPY ./fluent_bit_custom.conf /fluent-bit/etc/fluent-bit_custom.conf
+COPY ./parser_custom.conf /fluent-bit/etc/parser_custom.conf
+COPY ./stream_processor_custom.conf /fluent-bit/etc/stream_processor_custom.conf
 COPY --from=0 /go/fluent-bit-go-s3/out_s3.so /fluent-bit/out_s3.so
 
-CMD ["/fluent-bit/bin/fluent-bit", "-e", "/fluent-bit/out_s3.so", "-c", "/fluent-bit/etc/fluent-bit.conf"]
+CMD ["/fluent-bit/bin/fluent-bit", "-e", "/fluent-bit/out_s3.so", "-c", "/fluent-bit/etc/fluent-bit_custom.conf"]
