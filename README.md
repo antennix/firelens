@@ -59,11 +59,11 @@ https://docs.aws.amazon.com/en_us/AmazonECS/latest/userguide/using_firelens.html
                 },
                 {
                     "name": "OUT_DATADOG_SOURCE",
-                    "value": "web-container"
+                    "value": ""*********""
                 },
                 {
                     "name": "OUT_DATADOG_SERVICE_ERROR",
-                    "value": "web-container"
+                    "value": ""*********""
                 },
                 {
                     "name": "OUT_DATADOG_SERVICE_APPLICATION",
